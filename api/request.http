@@ -1,0 +1,5 @@
+### Get a repo by ID
+GET http://localhost:3000/api/repos/R_kgDOL4U9Ug
+
+### Get all repos
+GET http://localhost:3000/api/repos
