@@ -1,5 +1,31 @@
 ### Get a repo by ID
-GET http://localhost:3000/api/repos/R_kgDOL4U9Ug
+GET http://localhost:3000/api/repos/R_kgDOL54feZ
 
 ### Get all repos
 GET http://localhost:3000/api/repos
+
+### Add repo
+POST http://localhost:3000/api/repos
+Content-Type: application/json
+
+{
+    "id": "R_kgDOL54feZ",
+    "isPrivate": 1,
+    "name": "repoTest",
+    "url": "https://github.com/pjroggy/repotest"
+}
+
+### Get a lang by ID
+GET http://localhost:3000/api/langs/1
+
+### Get all langs
+GET http://localhost:3000/api/langs
+
+### Add lang
+POST http://localhost:3000/api/langs
+Content-Type: application/json
+
+{
+    "id": 9,
+    "label": "langTest"
+}
