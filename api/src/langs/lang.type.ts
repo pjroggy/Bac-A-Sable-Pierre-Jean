@@ -1,4 +1,4 @@
 export type Lang = {
-    id: number;
-    label: string;
-}
+  id: number;
+  label: string;
+};

@@ -4,6 +4,9 @@ GET http://localhost:3000/api/repos/R_kgDOL54feZ
 ### Get all repos
 GET http://localhost:3000/api/repos
 
+### Get repo by status "private"
+GET http://localhost:3000/api/repos?status=1
+
 ### Add repo
 POST http://localhost:3000/api/repos
 Content-Type: application/json
@@ -15,11 +18,17 @@ Content-Type: application/json
     "url": "https://github.com/pjroggy/repotest"
 }
 
+### Delete repo
+DELETE http://localhost:3000/api/repos/R_kgDOL54feZ
+
 ### Get a lang by ID
 GET http://localhost:3000/api/langs/1
 
 ### Get all langs
 GET http://localhost:3000/api/langs
+
+### Get lang by label "langTest"
+GET http://localhost:3000/api/langs?label=langTest
 
 ### Add lang
 POST http://localhost:3000/api/langs
@@ -29,3 +38,6 @@ Content-Type: application/json
     "id": 9,
     "label": "langTest"
 }
+
+### Delete lang
+DELETE http://localhost:3000/api/repos/9
