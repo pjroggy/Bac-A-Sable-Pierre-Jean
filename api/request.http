@@ -1,14 +1,14 @@
 ### Get a repo by ID
-GET http://localhost:3000/api/repos/R_kgDOL54feZ
+GET http://localhost:3000/api/repos/repo/R_kgDOL54feZ
 
 ### Get all repos
-GET http://localhost:3000/api/repos
+GET http://localhost:3000/api/repos/repo
 
 ### Get repo by status "private"
 GET http://localhost:3000/api/repos?status=1
 
 ### Add repo
-POST http://localhost:3000/api/repos
+POST http://localhost:3000/api/repos/post
 Content-Type: application/json
 
 {
@@ -18,8 +18,20 @@ Content-Type: application/json
     "url": "https://github.com/pjroggy/repotest"
 }
 
+### Put repo
+
+PUT http://localhost:3000/api/repos/repo/R_kgDOL54feZ
+Content-Type: application/json
+
+{
+    "id": "R_kgDOL54feZ",
+    "isPrivate": 2,
+    "name": "updateRepoTest",
+    "url": "https://github.com/pjroggy/repotest"
+}
+
 ### Delete repo
-DELETE http://localhost:3000/api/repos/R_kgDOL54feZ
+DELETE http://localhost:3000/api/repos/repo/R_kgDOL54feZ
 
 ### Get a lang by ID
 GET http://localhost:3000/api/langs/1
