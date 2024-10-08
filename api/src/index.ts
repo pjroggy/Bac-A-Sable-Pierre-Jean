@@ -1,18 +1,22 @@
 import express from "express";
 import router from "./router";
-import "reflect-metadata";
 import { AppDataSource } from "./data-source";
+import "reflect-metadata";
+import cors from "cors";
 
 const app = express();
-const port = 3000;
+const { PORT } = process.env;
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
 
 app.use(express.json());
-
 app.use("/api", router);
 
-app.listen(port, async() => {
+app.listen(PORT, async () => {
   await AppDataSource.initialize();
-  console.log("serveur is listening on http://localhost:3000");
+  console.log(`serveur is listening on http://localhost:${PORT}`);
 });
-
- 
