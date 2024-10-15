@@ -5,7 +5,8 @@ import ReactDOM from "react-dom/client";
 import HomePage from "./pages/HomePage.tsx";
 import DetailPage from "./pages/DetailPage.tsx";
 import React from "react";
-import connexion from "./service/connexion.ts";
+import { ApolloProvider } from "@apollo/client";
+import client from "./service/connexion.ts";
 
 const router = createBrowserRouter([
   {
@@ -17,12 +18,12 @@ const router = createBrowserRouter([
       },
       {
         path: "/detail/:id",
-        element: <DetailPage/>,
-        loader: async ({ params }) => {
-          const repos = await connexion.get(`/api/repos/${params.id}`);
-          console.log("Loader", repos);
-          return repos.data;
-        },
+        element: <DetailPage />,
+        // loader: async ({ params }) => {
+        //   const repos = await connexion.get(`/api/repos/${params.id}`);
+        //   console.log("Loader", repos);
+        //   return repos.data;
+        // },
       },
     ],
   },
@@ -30,6 +31,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <ApolloProvider client={client}>
+      <RouterProvider router={router} />
+    </ApolloProvider>
   </React.StrictMode>
 );

@@ -1,21 +1,26 @@
 import { Repo } from "../repos/repos.entities";
 import { IsString } from "class-validator";
+import { Field, ObjectType } from "type-graphql";
 import {
-    BaseEntity,
-    Column, Entity,
-    OneToMany,
-    PrimaryGeneratedColumn
-   } from "typeorm";
-   
-   @Entity()
-   export class Status extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 
-    @Column({ length: 100 })
-    @IsString()
-    label: string;
+@ObjectType()
+@Entity()
+export class Status extends BaseEntity {
+  @Field()
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @OneToMany(()=> Repo, repo => repo.status)
-    repos?: Repo[];
-   }
+  @Field()
+  @Column({ length: 100 })
+  @IsString()
+  label: string;
+
+  @OneToMany(() => Repo, (repo) => repo.status)
+  repos?: Repo[];
+}

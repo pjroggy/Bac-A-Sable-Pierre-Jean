@@ -10,26 +10,34 @@ import {
 import { Min, Max, IsString } from "class-validator";
 import { Status } from "../status/status.entities";
 import { Lang } from "../langs/lang.entities";
+import { Field, ObjectType } from "type-graphql";
 
+@ObjectType()
 @Entity()
 export class Repo extends BaseEntity {
+  @Field()
   @PrimaryColumn()
   @IsString()
   id: string;
 
+
+  @Field()
+  @Column({ length: 100 })
+  @IsString()
+  name: string;
+
+  @Field()
+  @Column({ length: 100 })
+  @IsString()
+  url: string;
+
+  @Field(()=> Status)
   @ManyToOne(() => Status, (status) => status.id)
   @Min(1)
   @Max(2)
   status: Status;
 
-  @Column({ length: 100 })
-  @IsString()
-  name: string;
-
-  @Column({ length: 100 })
-  @IsString()
-  url: string;
-
+  @Field(()=> [Lang])
   @ManyToMany(() => Lang)
   @JoinTable()
   langs: Lang[];
