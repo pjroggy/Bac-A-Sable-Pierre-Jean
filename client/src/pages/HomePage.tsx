@@ -1,43 +1,42 @@
 import RepoCard from "../components/RepoCard";
-import type { Repo } from "../types/RepoTypes";
-import { useQuery, gql } from "@apollo/client";
 import "./homePage.css";
+import { useGetAllRepoQuery } from "../generated/graphql-types";
 // import { useEffect, useState } from "react";
 // import connexion from "./services/connexion";
 
-const GET_REPOS = gql`
-  query query Query($filter: Float) {
-  allRepos(filter: $filter) {
-    id
-    langs {
-      id
-      label
-    }
-    name
-    status {
-      id
-      label
-    }
-    url
-  }
-  allLangs {
-    label
-    id
-  }
-  allStatus {
-    id
-    label
-  }
-}
-`;
+// const GET_REPOS = gql`
+//   query getAllRepo($filter: Float) {
+//   allRepos(filter: $filter) {
+//     id
+//     langs {
+//       id
+//       label
+//     }
+//     name
+//     status {
+//       id
+//       label
+//     }
+//     url
+//   }
+//   allLangs {
+//     label
+//     id
+//   }
+//   allStatus {
+//     id
+//     label
+//   }
+// }
+// `;
 
 export default function HomePage() {
-  const { loading, error, data, refetch } = useQuery(
-    GET_REPOS
+  const { loading, error, data, refetch } =
+    useGetAllRepoQuery();
+    // GET_REPOS
     //   {
     //   variables: { filter: null }
     // }
-  );
   // const [repos, setRepos] = useState<Repo[]>([]);
 
   // useEffect(() => {
@@ -61,36 +60,35 @@ export default function HomePage() {
   // const filteredRepo = (filter: string | null) => {
   //   refetch({ filter });
   // };
-
-  return (
-    <>
-      <h1></h1>
-      <div className="filter-buttons">
-        <button onClick={() => refetch({ filter: null })}>
-          Tout les langages
-        </button>
-        {data?.allLangs?.langs?.map(
-          (lang: { id: number; label: string }) => (
+  if (data) {
+    return (
+      <>
+        <h1></h1>
+        <div className="filter-buttons">
+          <button onClick={() => refetch({ filter: null })}>
+            Tout les langages
+          </button>
+          {data.allLangs.map((lang: { id: number; label: string }) => (
             <button key={lang.id} onClick={() => refetch({ filter: lang.id })}>
               {lang.label}
             </button>
-          )
-        )}
-      </div>
-      <section className="repoList">
-        {data.allRepos.map((repo: Repo) => (
-          <RepoCard
-            key={repo.id}
-            name={repo.name}
-            url={repo.url}
-            langs={repo.langs}
-            status={repo.status}
-            id={repo.id}
-          />
-        ))}
-      </section>
-    </>
-  );
+          ))}
+        </div>
+        <section className="repoList">
+          {data.allRepos.map((repo) => (
+            <RepoCard
+              key={repo.id}
+              name={repo.name}
+              url={repo.url}
+              langs={repo.langs}
+              status={repo.status}
+              id={repo.id}
+            />
+          ))}
+        </section>
+      </>
+    );
+  }
 }
 
 // const pers = {

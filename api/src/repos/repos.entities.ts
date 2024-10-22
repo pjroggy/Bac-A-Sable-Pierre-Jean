@@ -7,7 +7,7 @@ import {
   ManyToOne,
   PrimaryColumn,
 } from "typeorm";
-import { Min, Max, IsString } from "class-validator";
+import { Min, Max, IsBoolean, IsString } from "class-validator";
 import { Status } from "../status/status.entities";
 import { Lang } from "../langs/lang.entities";
 import { Field, ObjectType } from "type-graphql";
@@ -30,6 +30,11 @@ export class Repo extends BaseEntity {
   @Column({ length: 100 })
   @IsString()
   url: string;
+
+  @Field()
+  @Column({ default: () => false })
+  @IsBoolean()
+  isFavorite: boolean;
 
   @Field(()=> Status)
   @ManyToOne(() => Status, (status) => status.id)
