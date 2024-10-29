@@ -85,6 +85,7 @@ export type GetAllRepoQueryVariables = Exact<{
 export type GetAllRepoQuery = {
   __typename?: "Query";
   allRepos: Array<{
+    isFavorite: boolean;
     __typename?: "Repo";
     id: string;
     name: string;

@@ -10,7 +10,7 @@ COPY src src
 
 COPY data data
 
-RUN npm run seed
+# RUN npm run seed
 
 EXPOSE 4000
 

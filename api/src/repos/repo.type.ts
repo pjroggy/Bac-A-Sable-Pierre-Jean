@@ -3,4 +3,5 @@ export type Repo = {
   isPrivate: number;
   name: string;
   url: string;
+  isFavorite: boolean;
 };

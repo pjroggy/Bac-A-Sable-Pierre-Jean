@@ -7,4 +7,5 @@ export type Repo = {
   url: string;
   langs: Lang[];
   status: Status;
+  isFavorite: boolean;
 };

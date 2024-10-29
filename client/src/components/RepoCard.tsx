@@ -2,7 +2,7 @@
 import "./repoCard.css"
 import { Link } from "react-router-dom";
 import type { Repo } from "../types/RepoTypes";
-export default function RepoCard({ name, url, id, langs }: Repo) {
+export default function RepoCard({ name, url, id, langs, isFavorite }: Repo) {
   return (
     <>
       <section className="repoCard">
@@ -16,6 +16,7 @@ export default function RepoCard({ name, url, id, langs }: Repo) {
           ))}{" "}
         </ul>
         <Link to={`/detail/${id}`}>Plus d'infos</Link>
+        <p>{isFavorite ? "Favory :❤️‍🔥" : "Non Favory 🩶"}</p>
       </section>
     </>
   );

@@ -17,15 +17,17 @@ import langs_by_repo from "../data/lang_by_repo.json";
 
   try {
     await queryRunner.startTransaction();
-    await queryRunner.query("DELETE FROM repo_langs_lang");
-    await queryRunner.query("DELETE FROM lang");
-    await queryRunner.query("DELETE FROM repo");
-    await queryRunner.query("DELETE FROM status");
+    await queryRunner.query("TRUNCATE repo_langs_lang CASCADE");
+    await queryRunner.query("TRUNCATE lang CASCADE");
+    await queryRunner.query("TRUNCATE repo CASCADE");
+    await queryRunner.query("TRUNCATE status CASCADE");
 
-    await queryRunner.query(
-      'DELETE FROM sqlite_sequence WHERE name="status" OR name="lang"'
-    );
-
+    console.log("Truncate DONE");
+    await queryRunner.commitTransaction();
+  } catch (error) {
+    console.log(error);
+    await queryRunner.rollbackTransaction();
+  } finally {
     const savedlangs = await Promise.all(
       langs.map(async (lan) => {
         const lang = new Lang();
@@ -44,41 +46,43 @@ import langs_by_repo from "../data/lang_by_repo.json";
         return await status.save();
       })
     );
-    console.log(savedstatus);
+    console.info(savedstatus);
 
-    const savedrepos = await Promise.all(
+    // const savedrepos =
+    await Promise.all(
       repos.map(async (rep) => {
         const repo = new Repo();
         repo.id = rep.id;
         repo.name = rep.name;
         repo.url = rep.url;
 
-        const status = savedstatus.find(
-          (st) => st.id === rep.isPrivate
-        ) as Status;
-        repo.status = status;
+        // const status = savedstatus.find(
+        //   (st) => st.id === rep.isPrivate
+        // ) as Status;
+        repo.status = savedstatus[0];
 
         const mylangs = savedlangs.filter((svlg) => {
           console.log("repoId", rep.id);
           const associatedlang = langs_by_repo.filter(
-            lgbyrepo => lgbyrepo.repo_id === rep.id
+            (lgbyrepo) => lgbyrepo.repo_id === rep.id
           );
           console.log("A", associatedlang);
-          const langLabel = langs.filter(lg =>
-            associatedlang.some(assolg => assolg.lang_id === lg.id)
+          const langLabel = langs.filter((lg) =>
+            associatedlang.some((assolg) => assolg.lang_id === lg.id)
           );
-          return langLabel.some(lglabel => lglabel.label === svlg.label);
+          return langLabel.some((lglabel) => lglabel.label === svlg.label);
         });
         repo.langs = mylangs;
+        repo.isFavorite=false;
 
         return await repo.save();
       })
     );
-    console.log(savedrepos);
+    // console.log(savedrepos);
 
-    await queryRunner.commitTransaction();
-  } catch (error) {
-    console.log(error);
-    await queryRunner.rollbackTransaction();
+    // await queryRunner.commitTransaction();
+    console.info("Seeder is DONE");
+    await AppDataSource.destroy();
+    return;
   }
 })();

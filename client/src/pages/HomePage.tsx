@@ -63,7 +63,7 @@ export default function HomePage() {
   if (data) {
     return (
       <>
-        <h1></h1>
+        <h1>Aire de Repos de PJ!</h1>
         <div className="filter-buttons">
           <button onClick={() => refetch({ filter: null })}>
             Tout les langages
@@ -83,6 +83,7 @@ export default function HomePage() {
               langs={repo.langs}
               status={repo.status}
               id={repo.id}
+              isFavorite={repo.isFavorite}
             />
           ))}
         </section>
