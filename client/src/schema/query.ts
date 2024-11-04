@@ -25,3 +25,22 @@ export const GET_REPOS = gql`
   }
 }
 `;
+
+export const GET_REPO_BY_ID = gql`
+query RepoById($repoByIdId: String!) {
+  repoById(id: $repoByIdId) {
+    id
+    langs {
+      label
+      id
+    }
+    isFavorite
+    name
+    status {
+      label
+      id
+    }
+    url
+  }
+}
+`;

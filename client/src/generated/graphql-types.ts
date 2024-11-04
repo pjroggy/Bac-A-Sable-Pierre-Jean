@@ -79,7 +79,9 @@ export type GetAllRepoQueryVariables = Exact<{
 }>;
 
 
-export type GetAllRepoQuery = { __typename?: 'Query', allRepos: Array<{ __typename?: 'Repo', id: string, name: string, url: string, langs: Array<{ __typename?: 'Lang', id: number, label: string }>, status: { __typename?: 'Status', id: number, label: string } }>, allLangs: Array<{ __typename?: 'Lang', label: string, id: number }>, allStatus: Array<{ __typename?: 'Status', id: number, label: string }> };
+export type GetAllRepoQuery = { __typename?: 'Query', allRepos: Array<{
+  isFavorite: boolean; __typename?: 'Repo', id: string, name: string, url: string, langs: Array<{ __typename?: 'Lang', id: number, label: string }>, status: { __typename?: 'Status', id: number, label: string } 
+}>, allLangs: Array<{ __typename?: 'Lang', label: string, id: number }>, allStatus: Array<{ __typename?: 'Status', id: number, label: string }> };
 
 
 export const GetAllRepoDocument = gql`
