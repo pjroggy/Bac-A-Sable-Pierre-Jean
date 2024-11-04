@@ -42,6 +42,26 @@ export default class RepoResolver {
     // console.log(repos);
     return repos;
   }
+  @Query(() => Repo, { nullable: true })
+  async repoById(@Arg("id") id: string): Promise<Repo | null> {
+    try {
+      const repo = await Repo.findOne({
+        where: { id },
+        relations: {
+          status: true,
+          langs: true,
+        },
+      });
+      if (!repo) {
+        console.log(`Repo avec l'id ${id} non trouvé.`);
+        return null;
+      }
+      return repo;
+    } catch (error) {
+      console.error("Erreur lors de la récupération du repo :", error);
+      throw error;
+    }
+  }
 
   @Mutation(() => Repo) //ici typage de la donnée entrante
   // @Arg : typage de la donnée sortante
