@@ -1,54 +1,44 @@
 import { useParams } from "react-router-dom";
-import { gql, useApolloClient, useQuery } from "@apollo/client";
-
-const REPO_BY_ID = gql`
-  query RepoById($repoByIdId: String!) {
-    repoById(id: $repoByIdId) {
-      id
-      langs {
-        label
-        id
-      }
-      isFavorite
-      name
-      status {
-        label
-        id
-      }
-      url
-    }
-  }
-`;
+import { useApolloClient, useQuery } from "@apollo/client";
+import "./DetailPage.css";
+import { Lang } from "../types/LangTypes";
+import { REPO_BY_ID } from "../schema/query";
+import { UPDATE_REPO_FAVORITE } from "../schema/mutations";
 
 export default function DetailPage() {
   const { id } = useParams();
   const client = useApolloClient();
 
-  // Utilisez useQuery pour récupérer les données du dépôt
   const { loading, error, data } = useQuery(REPO_BY_ID, {
-    variables: { repoByIdId: id }, // Passez l'ID ici
+    variables: { repoByIdId: id },
   });
 
   const handleLike = async () => {
     if (!data) return;
     try {
       const { data: updatedRepo } = await client.mutate({
-        mutation: gql`
-          mutation UpdateRepoFavorite($id: ID!, $isFavorite: Boolean!) {
-            updateRepo(id: $id, isFavorite: $isFavorite) {
-              id
-              isFavorite
-            }
-          }
-        `,
+        mutation: UPDATE_REPO_FAVORITE,
         variables: {
           id: data.repoById.id,
           isFavorite: !data.repoById.isFavorite,
         },
+        update: (cache, { data: { updateRepo } }) => {
+          cache.writeQuery({
+            query: REPO_BY_ID,
+            variables: { repoByIdId: data.repoById.id },
+            data: {
+              repoById: {
+                ...data.repoById,
+                isFavorite: updateRepo.isFavorite,
+              },
+            },
+          });
+        },
       });
-      // Affichez le nouveau statut de favori directement
-      const updatedIsFavorite = updatedRepo.updateRepo.isFavorite;
-      console.log("Updated favorite status:", updatedIsFavorite);
+      console.log(
+        "Updated favorite status:",
+        updatedRepo.updateRepo.isFavorite
+      );
     } catch (error) {
       console.error(error);
     }
@@ -60,12 +50,17 @@ export default function DetailPage() {
   return (
     <>
       {data && (
-        <div>
-          <h1>{data.repoById.name}</h1>
+        <section className="detailCard">
+          <h1 className="detailTitle">{data.repoById.name}</h1>
+          <ul>
+            {data.repoById.langs.map((lang: Lang) => (
+              <li key={lang.id}>{lang.label}</li>
+            ))}{" "}
+          </ul>
           <button type="button" onClick={handleLike}>
             {data.repoById.isFavorite ? "DisLike 🩶" : "Like ❤️‍🔥"}
           </button>
-        </div>
+        </section>
       )}
     </>
   );

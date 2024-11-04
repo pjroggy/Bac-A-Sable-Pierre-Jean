@@ -20,7 +20,6 @@ class RepoInput implements Partial<Repo> {
 
 @Resolver(Repo)
 export default class RepoResolver {
-  // Methode Get pour tout les repos
   @Query(() => [Repo])
   async allRepos(@Arg("filter", { nullable: true }) filter: number) {
     if (filter) {
@@ -39,7 +38,6 @@ export default class RepoResolver {
         langs: true,
       },
     });
-    // console.log(repos);
     return repos;
   }
   @Query(() => Repo, { nullable: true })
@@ -95,5 +93,18 @@ export default class RepoResolver {
     });
     console.log("myRepo", myRepo);
     return myRepo;
+  }
+  @Mutation(() => Repo)
+  async updateRepo(
+    @Arg("id") id: string,
+    @Arg("isFavorite") isFavorite: boolean
+  ): Promise<Repo | null> {
+    const repo = await Repo.findOne({ where: { id } });
+    if (!repo) throw new Error("Repo not found");
+
+    repo.isFavorite = isFavorite;
+    await repo.save();
+
+    return repo;
   }
 }
