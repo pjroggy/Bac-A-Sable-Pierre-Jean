@@ -1,12 +1,33 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Repo } from "../types/RepoTypes";
-import { gql, useApolloClient } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
+
+const REPO_BY_ID = gql`
+  query RepoById($repoByIdId: String!) {
+    repoById(id: $repoByIdId) {
+      id
+      langs {
+        label
+        id
+      }
+      isFavorite
+      name
+      status {
+        label
+        id
+      }
+      url
+    }
+  }
+`;
 
 export default function DetailPage() {
   const { id } = useParams();
-  const [data, setData] = useState<Repo | undefined>(undefined);
   const client = useApolloClient();
+
+  // Utilisez useQuery pour récupérer les données du dépôt
+  const { loading, error, data } = useQuery(REPO_BY_ID, {
+    variables: { repoByIdId: id }, // Passez l'ID ici
+  });
 
   const handleLike = async () => {
     if (!data) return;
@@ -20,45 +41,29 @@ export default function DetailPage() {
             }
           }
         `,
-        variables: { id, isFavorite: !data.isFavorite },
+        variables: {
+          id: data.repoById.id,
+          isFavorite: !data.repoById.isFavorite,
+        },
       });
-      setData({ ...data, isFavorite: updatedRepo.updateRepo.isFavorite });
+      // Affichez le nouveau statut de favori directement
+      const updatedIsFavorite = updatedRepo.updateRepo.isFavorite;
+      console.log("Updated favorite status:", updatedIsFavorite);
     } catch (error) {
       console.error(error);
     }
   };
 
-  useEffect(() => {
-    const fetchRepos = async () => {
-      try {
-        const { data: repoData } = await client.query({
-          query: gql`
-            query GetRepo($id: ID!) {
-              repo(id: $id) {
-                id
-                name
-                isFavorite
-              }
-            }
-          `,
-          variables: { id },
-        });
-        console.log("Fetched Repo Data:", repoData);
-        setData(repoData.repo);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchRepos();
-  }, [id, client]);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <>
       {data && (
         <div>
-          <h1>{data.name}</h1>
+          <h1>{data.repoById.name}</h1>
           <button type="button" onClick={handleLike}>
-            {data.isFavorite ? "DisLike 🩶" : "Like ❤️‍🔥"}
+            {data.repoById.isFavorite ? "DisLike 🩶" : "Like ❤️‍🔥"}
           </button>
         </div>
       )}
