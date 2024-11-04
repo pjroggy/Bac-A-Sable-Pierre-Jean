@@ -1,2 +1,2 @@
 # Bac-A-Sable-Pierre-Jean
-"au boulot"
+"au boulot feignasse"

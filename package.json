@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "concurrently": "^9.0.1"
+  },
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix api\" \"npm run dev --prefix client\""
+  }
+}

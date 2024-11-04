@@ -1,0 +1,86 @@
+### Get a repo by ID
+GET http://localhost:3310/api/repos/R_kgDOL54feZ
+
+### Get all repos
+GET http://localhost:3310/api/repos
+
+### Get repo by status "private"
+GET http://localhost:3310/api/repos?status=1
+
+### Add repo
+POST http://localhost:3310/api/repos/post
+Content-Type: application/json
+
+{
+    "id": "R_kgDOL54fez",
+    "isPrivate": 2,
+    "name": "repoTest2",
+    "url": "https://github.com/pjroggy/repotest2"
+}
+
+### Add repo with lang
+POST http://localhost:3310/api/repos/post
+Content-Type: application/json
+
+{
+    "id": "R_kgDOL54fea",
+    "isPrivate": 2,
+    "name": "repoTest1",
+    "url": "https://github.com/pjroggy/repotest1",
+    "langs": [1, 2]
+}
+
+### Put repo
+
+PUT http://localhost:3310/api/repos/R_kgDOL54feZ
+Content-Type: application/json
+
+{
+    "id": "R_kgDOL54feZ",
+    "isPrivate": 2,
+    "name": "updateRepoTest",
+    "url": "https://github.com/pjroggy/repotest"
+}
+
+### Delete repo
+DELETE http://localhost:3310/api/repos/R_kgDOL54feZ
+
+### Get a lang by ID
+GET http://localhost:3310/api/langs/1
+
+### Get all langs
+GET http://localhost:3310/api/langs
+
+### Get lang by label "langTest"
+GET http://localhost:3310/api/langs?label=Java
+
+### Add lang
+POST http://localhost:3310/api/langs
+Content-Type: application/json
+
+{
+    "id": 6,
+    "label": "langTest"
+}
+
+### Put lang
+
+PUT http://localhost:3310/api/langs/6
+Content-Type: application/json
+
+{
+    "id": 6,
+    "label": "langtesttttttttttt"
+}
+
+### Delete lang
+DELETE http://localhost:3310/api/langs/6
+
+### Add status
+POST http://localhost:3310/api/status
+Content-Type: application/json
+
+{
+    "id": 1,
+    "label": "isPrivate"
+}
