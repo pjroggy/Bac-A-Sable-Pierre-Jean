@@ -1,3 +1,4 @@
+import * as dotenv from "dotenv";
 import "reflect-metadata";
 import { ApolloServer } from "@apollo/server"; // preserve-line
 import { startStandaloneServer } from "@apollo/server/standalone"; // preserve-line
@@ -60,6 +61,9 @@ import LangResolver from "./langs/lang.resolver";
 //  1. creates an Express app
 //  2. installs your ApolloServer instance as middleware
 //  3. prepares your app to handle incoming requests
+dotenv.config();
+const { PORT } = process.env;
+
 (async () => {
   await AppDataSource.initialize();
   const schema = await buildSchema({
@@ -71,7 +75,7 @@ import LangResolver from "./langs/lang.resolver";
   });
 
   const { url } = await startStandaloneServer(server, {
-    listen: { port: 4000 },
+    listen: { port: Number(PORT) },
   });
 
   console.log(`🚀  Server ready at: ${url}`);
