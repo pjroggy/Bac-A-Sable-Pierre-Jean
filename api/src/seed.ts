@@ -73,14 +73,11 @@ import langs_by_repo from "../data/lang_by_repo.json";
           return langLabel.some((lglabel) => lglabel.label === svlg.label);
         });
         repo.langs = mylangs;
-        repo.isFavorite=false;
+        repo.isFavorite = false;
 
         return await repo.save();
       })
     );
-    // console.log(savedrepos);
-
-    // await queryRunner.commitTransaction();
     console.info("Seeder is DONE");
     await AppDataSource.destroy();
     return;
