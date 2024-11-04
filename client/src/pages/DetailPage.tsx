@@ -1,38 +1,56 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Repo } from "../types/RepoTypes";
-import connexion from "../service/connexion";
+import { gql, useApolloClient } from "@apollo/client";
 
 export default function DetailPage() {
   const { id } = useParams();
-  const [data, setData] = useState<Repo> ;
+  const [data, setData] = useState<Repo | undefined>(undefined);
+  const client = useApolloClient();
 
   const handleLike = async () => {
+    if (!data) return;
     try {
-      await connexion.patch(`/api/repos/${id}`, {
-        isFavorite: !data.isFavorite,
+      const { data: updatedRepo } = await client.mutate({
+        mutation: gql`
+          mutation UpdateRepoFavorite($id: ID!, $isFavorite: Boolean!) {
+            updateRepo(id: $id, isFavorite: $isFavorite) {
+              id
+              isFavorite
+            }
+          }
+        `,
+        variables: { id, isFavorite: !data.isFavorite },
       });
-      // const newRepos = { ...data } as Repo;
-      // newRepos.isFavorite = !data?.isFavorite;
-      // setData(newRepos);
-      setData({ ...data, isFavorite: !data.isFavorite });
+      setData({ ...data, isFavorite: updatedRepo.updateRepo.isFavorite });
     } catch (error) {
       console.error(error);
     }
   };
 
-  <div>DetailPage {id}</div>;
   useEffect(() => {
     const fetchRepos = async () => {
       try {
-        const repos = await connexion.get(`/api/repos/${id}`);
-        setData(repos.data[0]);
+        const { data: repoData } = await client.query({
+          query: gql`
+            query GetRepo($id: ID!) {
+              repo(id: $id) {
+                id
+                name
+                isFavorite
+              }
+            }
+          `,
+          variables: { id },
+        });
+        console.log("Fetched Repo Data:", repoData);
+        setData(repoData.repo);
       } catch (error) {
         console.error(error);
       }
     };
     fetchRepos();
-  }, [id]);
+  }, [id, client]);
 
   return (
     <>
@@ -47,15 +65,3 @@ export default function DetailPage() {
     </>
   );
 }
-
-// /**
-//  * Initialisation
-//  * data = {} ou undefined
-//  *
-//  * Après le useEffect
-//  * data = {
-//  *    pers: {
-//  *      firstname: "Bob"
-//  *    }
-//  * }
-//  */
