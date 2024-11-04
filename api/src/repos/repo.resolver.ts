@@ -95,7 +95,7 @@ export default class RepoResolver {
     return myRepo;
   }
   @Mutation(() => Repo)
-  async updateRepo(
+  async UpdateRepoFavorite(
     @Arg("id") id: string,
     @Arg("isFavorite") isFavorite: boolean
   ): Promise<Repo | null> {
