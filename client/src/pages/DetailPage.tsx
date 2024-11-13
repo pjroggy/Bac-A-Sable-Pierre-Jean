@@ -58,7 +58,7 @@ export default function DetailPage() {
             ))}{" "}
           </ul>
           <button type="button" onClick={handleLike}>
-            {data.repoById.isFavorite ? "DisLike 🩶" : "Like ❤️‍🔥"}
+            {data.repoById.isFavorite ? "Désaimer 🩶" : "Aimer ❤️‍🔥"}
           </button>
         </section>
       )}

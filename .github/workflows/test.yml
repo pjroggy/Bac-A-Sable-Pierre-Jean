@@ -3,7 +3,8 @@ name: Run All API TEST
 on:
   pull_request:
     branches:
-      - authorization
+      - mocktest
+    types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
   tests-api:
