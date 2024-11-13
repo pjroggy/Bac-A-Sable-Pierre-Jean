@@ -1,4 +1,4 @@
-import { Arg, Field, InputType, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Authorized, Field, InputType, Mutation, Query, Resolver } from "type-graphql";
 import { Repo } from "./repos.entities";
 import { Status } from "../status/status.entities";
 // import { Lang } from "../langs/lang.entities";
@@ -61,6 +61,7 @@ export default class RepoResolver {
     }
   }
 
+  @Authorized("admin")
   @Mutation(() => Repo) //ici typage de la donnée entrante
   // @Arg : typage de la donnée sortante
   async createNewRepo(@Arg("data") newRepo: RepoInput) {
@@ -83,7 +84,7 @@ export default class RepoResolver {
     // repo.langs = langs;
 
     await repo.save();
-    console.log("repo", repo);
+    // console.log("repo", repo);
     const myRepo = await Repo.findOneOrFail({
       where: { id: newRepo.id },
       relations: {
@@ -91,7 +92,7 @@ export default class RepoResolver {
         status: true,
       },
     });
-    console.log("myRepo", myRepo);
+    // console.log("myRepo", myRepo);
     return myRepo;
   }
   @Mutation(() => Repo)

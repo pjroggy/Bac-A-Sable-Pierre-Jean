@@ -10,8 +10,10 @@ COPY src src
 
 COPY data data
 
-# RUN npm run seed
+COPY ./jest.config.ts .
+
+COPY tests tests
 
 EXPOSE 4000
 
-CMD ["npm","run","full"]
+CMD ["npm", "run", "full"]
